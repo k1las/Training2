@@ -37,10 +37,11 @@ class Order extends Action
     public function execute()
     {
         $orderId = $this->getRequest()->getParam('orderId');
-        $response = [];
-        if ($orderId) {
+        try {
             $order = $this->order->get($orderId);
             $response = $this->_formatResponse($order);
+        } catch (\Exception $e) {
+            $response = ['error' => $e->getMessage(), 'status' => 404];
         }
 
         return $this->resultJsonFactory->create()
